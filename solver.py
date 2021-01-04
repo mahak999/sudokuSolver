@@ -1,4 +1,6 @@
 def stringToList(input_string):
+    # Function for converting inputted string of integers to list
+    # of integers (Used to take puzzle's row input from user)
     num_list = input_string.split()
     list1 = []
     for element in num_list:
@@ -33,6 +35,7 @@ def checkCol(board_param, col):
 
 
 def checkBox(board_param, row_start, col_start):
+    # checks for the repetition of the numbers from a small 3x3 box
     numbers_seen = set()
 
     for row in range(0, 3):
