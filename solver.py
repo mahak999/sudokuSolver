@@ -1,22 +1,119 @@
+def stringToList(input_string):
+    num_list = input_string.split()
+    list1 = []
+    for element in num_list:
+        list1.append(int(element))
+    return list1
+
+
+def checkRow(board_param, row):
+    # checks for the repetition of the numbers from a specific row
+    numbers_seen = set()
+
+    for i in range(0, 9):
+        if board_param[row][i] in numbers_seen:
+            return False
+        if board_param[row][i] != 0:
+            numbers_seen.add(board_param[row][i])
+
+    return True
+
+
+def checkCol(board_param, col):
+    # checks for the repetition of the numbers from a specific column
+    numbers_seen = set()
+
+    for i in range(0, 9):
+        if board_param[i][col] in numbers_seen:
+            return False
+        if board_param[i][col] != 0:
+            numbers_seen.add(board_param[i][col])
+
+    return True
+
+
+def checkBox(board_param, row_start, col_start):
+    numbers_seen = set()
+
+    for row in range(0, 3):
+        for col in range(0, 3):
+            curr = board_param[row + row_start][col + col_start]
+
+            # If already encountered before,
+            # return false
+            if curr in numbers_seen:
+                return False
+
+            # If it is not an empty cell,
+            # insert value at current cell in set
+            if curr != 0:
+                numbers_seen.add(curr)
+
+    return True
+
+
+def isValid(board_param, row, col):
+    # checking certain row, col combination for correctness
+    # row and col are divided by 3 in order to obtain the beginning of small box
+    return (checkRow(board_param, row) and checkCol(board_param, col) and
+            checkBox(board_param, row - row % 3, col - col % 3))
+
+
+def isValidBoard(board_param, n):
+    for i in range(0, n):
+        for j in range(0, n):
+            # if not a valid combination return false
+            if not isValid(board_param, i, j):
+                return False
+
+    return True
+
+
 yesNo = input(
     "In order to input a board to solve Press Y \n and if you want to use a "
     "default board Press N    ")
 if yesNo == 'Y':
     print(
-        "Input your board row-wise as a list here (press 0 to signify empty "
-        "cell)")
-    board_row1 = input("Input first row")
-    board_row2 = input("Input second row")
-    board_row3 = input("Input third row")
-    board_row4 = input("Input fourth row")
-    board_row5 = input("Input fifth row")
-    board_row6 = input("Input sixth row")
-    board_row7 = input("Input seventh row")
-    board_row8 = input("Input eighth row")
-    board_row9 = input("Input ninth row")
-    board = [board_row1, board_row2, board_row3, board_row4, board_row5, \
+        "Input your 9x9 board row-wise as a list here (press 0 to signify "
+        "empty cell)")
+    board_row1_temp = input("Input first row as a list separated by spaces\t")
+    board_row1 = stringToList(board_row1_temp)
+    board_row2_temp = input("Input second row as a list separated by spaces\t")
+    board_row2 = stringToList(board_row2_temp)
+    board_row3_temp = input("Input third row as a list separated by spaces\t")
+    board_row3 = stringToList(board_row3_temp)
+    board_row4_temp = input("Input fourth row as a list separated by spaces\t")
+    board_row4 = stringToList(board_row4_temp)
+    board_row5_temp = input("Input fifth row as a list separated by spaces\t")
+    board_row5 = stringToList(board_row5_temp)
+    board_row6_temp = input("Input sixth row as a list separated by spaces\t")
+    board_row6 = stringToList(board_row6_temp)
+    board_row7_temp = input("Input seventh row as a list separated by spaces\t")
+    board_row7 = stringToList(board_row7_temp)
+    board_row8_temp = input("Input eighth row as a list separated by spaces\t")
+    board_row8 = stringToList(board_row8_temp)
+    board_row9_temp = input("Input ninth row as a list separated by spaces\t")
+    board_row9 = stringToList(board_row9_temp)
+    if (len(board_row1) != 9 or len(board_row2) != 9 or len(board_row3) != 9 or
+            len(board_row4) != 9 or len(board_row5) != 9 or len(board_row6) != 9
+            or len(board_row7) != 9 or len(board_row8) != 9 or len(
+                board_row9) != 9):
+        print("This is not a valid board (insufficient numbers to create a "
+              "9x9 box).\n Restart the program to re-enter a new combination.")
+        exit()
+
+    board = [board_row1, board_row2, board_row3, board_row4, board_row5,
              board_row6, board_row7, board_row8, board_row9]
-else:
+
+    if not isValidBoard(board, 9):
+        print("This is not a valid board. Restart the program to re-enter "
+              "a new combination.")
+        exit()
+
+    print("accepted")
+
+
+elif yesNo == 'N':
     board = [[7, 8, 0, 4, 0, 0, 1, 2, 0],
              [6, 0, 0, 0, 7, 5, 0, 0, 9],
              [0, 0, 0, 6, 0, 1, 0, 7, 8],
@@ -27,6 +124,10 @@ else:
              [1, 2, 0, 0, 0, 7, 4, 0, 0],
              [0, 4, 9, 2, 0, 6, 0, 0, 7],
              ]
+
+else:
+    print("This is not a valid selection!")
+    exit()
 
 
 def printBoard(board_param):
@@ -49,7 +150,7 @@ def findEmptyCell(board_param):
     :return: a tuple representing the position of the empty cell in #row, #column format
     """
     for i in range(len(board_param)):
-        for k in range(len(board_param)):
+        for j in range(len(board_param)):
             if board_param[i][j] == 0:
                 return i, j
     return None
@@ -84,4 +185,30 @@ def valid(board_param, num, pos):
     return True
 
 
+def solve(board_param):
+    position_found = findEmptyCell(board_param)
+    if not position_found:  # if every position is filled then we got the answer
+        return True
+    else:
+        row, col = position_found
 
+    for i in range(1, 10):
+        if valid(board_param, i, (row, col)):
+            # if the inserted number is valid then insert it at that specific
+            # position
+            board_param[row][col] = i
+
+            if solve(board_param):  # algorithm proceeds to check further
+                # combinations
+                return True
+            board_param[row][col] = 0  # if the current combination is not
+            # valid then set it to zero and then try another combination for
+            # the previous empty cell
+
+    return False
+
+
+printBoard(board)
+solve(board)
+print("\n\n\n________________________________\nSolved puzzle:\n\n")
+printBoard(board)
