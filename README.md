@@ -7,7 +7,7 @@ The algorithm works by placing a number in an empty cell of the puzzle, and chec
 
 # Try it out in GitPod
 
-Open(https://gitpod.io#https://github.com/mahak999/sudokuSolver)
+[Open in GitPod](https://gitpod.io#https://github.com/mahak999/sudokuSolver)
 
 # Additional Resources
 I used this [video](https://www.youtube.com/watch?v=lK4N8E6uNr4&t=98s) to understand the process behind backtracking. Huge thanks to Tim @ Tech with tim for the wonderful explanation.
